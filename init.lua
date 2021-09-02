@@ -40,9 +40,12 @@ paq {'terrortylor/nvim-comment'}
 paq {'tpope/vim-fugitive'}
 paq {'tpope/vim-unimpaired'}
 paq {'jiangmiao/auto-pairs'}
-paq {'npxbr/gruvbox.nvim'}
 paq {'scrooloose/nerdtree'}
 paq {'tomtom/tcomment_vim'}
+paq {'morhetz/gruvbox'}
+paq {'sainnhe/gruvbox-material'}
+paq {'sainnhe/everforest'}
+paq {'junegunn/seoul256.vim'}
 
 -------------------- PLUGIN SETUP --------------------------
 -- bufbar
@@ -114,7 +117,7 @@ cmd 'runtime macros/sandwich/keymap/surround.vim'
 g['vimtex_quickfix_mode'] = false
 
 -------------------- OPTIONS -------------------------------
-local indent, width = 2, 90
+local indent, width = 4, 90
 opt.colorcolumn = tostring(width)   -- Line length marker
 opt.completeopt = {'menuone', 'noinsert', 'noselect'}  -- Completion options
 opt.cursorline = true               -- Highlight cursor line
@@ -127,7 +130,7 @@ opt.list = true                     -- Show some invisible characters
 opt.number = true                   -- Show line numbers
 opt.pastetoggle = '<F2>'            -- Paste mode
 opt.pumheight = 12                  -- Max height of popup menu
-opt.relativenumber = false          -- Relative line numbers
+opt.relativenumber = true           -- Relative line numbers
 opt.scrolloff = 4                   -- Lines of context
 opt.shiftround = true               -- Round indent
 opt.shiftwidth = indent             -- Size of an indent
@@ -145,8 +148,12 @@ opt.updatetime = 100                -- Delay before swap file is saved
 opt.wildmode = {'list', 'longest'}  -- Command-line completion mode
 opt.wrap = false                    -- Disable line wrap
 opt.mouse = "a"
-cmd 'colorscheme onedark'
+opt.langmap = "ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz"
+opt.background = "dark"
+cmd 'colorscheme everforest'
 
+g['everforest_disable_italic_comment'] = 1
+g['everforest_background'] = 'hard'
 -------------------- MAPPINGS ------------------------------
 map('', '<leader>c', '"+y')
 map('i', '<C-u>', '<C-g>u<C-u>')
@@ -154,6 +161,7 @@ map('i', '<C-w>', '<C-g>u<C-w>')
 map('i', '<S-Tab>', 'pumvisible() ? "\\<C-p>" : "\\<S-Tab>"', {expr = true})
 map('i', '<Tab>', 'pumvisible() ? "\\<C-n>" : "\\<Tab>"', {expr = true})
 map('i', 'jj', '<ESC>')
+map('i', '<ESC>', '<cmd>:update<CR><ESC>')
 map('n', '<C-l>', '<cmd>nohlsearch<CR>')
 map('n', '<C-w>T', '<cmd>tabclose<CR>')
 map('n', '<C-w>t', '<cmd>tabnew<CR>')
@@ -173,10 +181,15 @@ map('n', 'U', '<cmd>lua warn_caps()<CR>')
 map('t', '<ESC>', '&filetype == "fzf" ? "\\<ESC>" : "\\<C-\\>\\<C-n>"' , {expr = true})
 map('t', 'jj', '<ESC>', {noremap = false})
 map('v', '<leader>s', ':s//gcI<Left><Left><Left><Left>')
+map('v', '<leader>dq', ':s/\\%V\\(.*\\)\\%V/"\\1"/<CR>')
+map('v', '<leader>sq', ":s/\\%V\\(.*\\)\\%V/'\\1'/<CR>")
+map('v', '<leader>9', ':s/\\%V\\(.*\\)\\%V/(\\1)/<CR>')
+map('v', '<leader>[', ':s/\\%V\\(.*\\)\\%V/[\\1]/<CR>')
+map('v', '<leader>br', ':s/\\%V\\(.*\\)\\%V/{\\1}/<CR>')
 
 -------------------- LSP -----------------------------------
 for ls, cfg in pairs({
-  bashls = {}, gopls = {}, ccls = {}, jsonls = {}, pylsp = {},
+  bashls = {}, gopls = {}, ccls = {}, jsonls = {}, pylsp = {}, clangd = {},
 }) do require('lspconfig')[ls].setup(cfg) end
 map('n', '<space>,', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>')
 map('n', '<space>;', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>')
